@@ -10,7 +10,7 @@
     Soerawung Dashboard
   </title>
   <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
   <!-- Nucleo Icons -->
   <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
@@ -54,14 +54,10 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
-                    <h5 class="font-weight-bolder">
-                      $53,000
+                    <h5 id="" class="font-weight-bolder">
+                      Disini Kondisi
                     </h5>
-                    <p class="mb-0">
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
-                      since yesterday
-                    </p>
+                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Disini Keterangan</p>
                   </div>
                 </div>
                 <div class="col-4 text-end">
