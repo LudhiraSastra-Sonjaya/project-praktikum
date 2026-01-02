@@ -46,7 +46,7 @@
             <!-- CARDS -->
             <div class="grid grid-cols-3 gap-6 mb-8">
 
-                <div class="rounded-2xl bg-red-100 p-6 flex items-center gap-6">
+                <div class="rounded-2xl bg-red-100 p-6 flex items-center gap-6 hover:translate-y-[-5px] transition-transform delay-300">
                     <i class="fa-solid fa-fire text-[40px] pb-1 text-red-500"></i>
                     <div>
                         <h2 class="font-bold text-xl">Situasi Bahaya!</h2>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <div class="rounded-2xl bg-yellow-100 p-6 flex items-center gap-6">
+                <div class="rounded-2xl bg-yellow-100 p-6 flex items-center gap-6 hover:translate-y-[-5px] transition-transform delay-300">
                     <i class="fa-solid fa-gauge-simple text-[40px] text-yellow-500"></i>
                     <div>
                         <h2 class="font-bold text-xl">Kadar Gas Tinggi!</h2>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
 
-                <div class="rounded-2xl bg-white p-6 shadow flex items-center gap-4">
+                <div class="rounded-2xl bg-white p-6 shadow flex items-center gap-4 hover:translate-y-[-5px] transition-transform delay-300">
                     <i class="fa-solid fa-gauge-simple text-[40px] text-yellow-500"></i>
                     <div>
                         <p class="text-sm text-gray-700 pb-0.75">Kadar Gas</p>
@@ -82,7 +82,7 @@
 
             <div class="grid grid-cols-2 gap-6">
                 <!-- CHART PLACEHOLDER -->
-                <div class="rounded-2xl bg-white p-6 shadow">
+                <div class="rounded-2xl bg-white p-6 shadow hover:translate-y-[-5px] transition-transform delay-300">
                     <h2 class="font-bold mb-4">Kadar Gas Mingguan</h2>
     
                     <div class="h-80">
@@ -90,7 +90,7 @@
                     </div>
                 </div>
     
-                <div class="relative w-full h-105 rounded-2xl overflow-hidden shadow-lg">
+                <div class="relative w-full h-105 rounded-2xl overflow-hidden shadow-lg hover:translate-y-[-5px] transition-transform delay-300">
                     <!-- Background Image -->
                     <img 
                         src="{{ asset('assets/img/fotoLahan.jpeg') }}" 
