@@ -17,9 +17,9 @@ class SensorController extends Controller
         ]);
 
         // LOGIC STATUS
-        if ($request->flame_detected == 1 || $request->gas_ppm > 5000) {
+        if ($request->flame_detected == 0 || $request->gas_ppm > 600) {
             $status = 'BAHAYA';
-        } elseif ($request->gas_ppm >= 2000) {
+        } elseif ($request->gas_ppm >= 400) {
             $status = 'WASPADA';
         } else {
             $status = 'AMAN';

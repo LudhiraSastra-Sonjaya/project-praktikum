@@ -49,29 +49,30 @@
                 <div id="statusCard" class="rounded-2xl bg-red-100 p-6 flex items-center gap-6">
                     <i id="statusIcon" class="fa-solid fa-fire text-[40px] pb-1 text-red-500"></i>
                     <div>
-                        <h2 id="statusTitle" class="font-bold text-xl">Situasi Bahaya!</h2>
+                        <h2 id="statusTitle" class="font-bold text-xl"></h2>
                         <p id="statusDesc" class="text-sm text-gray-700">
-                            Api terdeteksi! Hati-hati kemungkinan terjadi kebakaran.
+                            
                         </p>
                     </div>
                 </div>
 
-                <div class="rounded-2xl bg-yellow-100 p-6 flex items-center gap-6">
-                    <i class="fa-solid fa-gauge-simple text-[40px] text-yellow-500"></i>
+                <div id="gasWarningCard" class="rounded-2xl bg-green-100 p-6 flex items-center gap-6">
+                    <i id="gasWarningIcon" class="fa-solid fa-circle-check text-[40px] text-green-500"></i>
                     <div>
-                        <h2 class="font-bold text-xl">Kadar Gas Tinggi!</h2>
-                        <p class="text-sm text-gray-700">
-                            Indikasi pemantik kebakaran besar.
+                        <h2 id="gasWarningTitle" class="font-bold text-xl">Gas Aman</h2>
+                        <p id="gasWarningDesc" class="text-sm text-gray-700">
+                            Kadar gas dalam batas normal.
                         </p>
                     </div>
                 </div>
+
 
                 <div class="rounded-2xl bg-white p-6 shadow flex items-center gap-4">
                     <i class="fa-solid fa-gauge-simple text-[40px] text-yellow-500"></i>
                     <div>
                         <p class="text-sm text-gray-700 pb-0.75">Kadar Gas</p>
                         <div class="flex items-baseline gap-2">
-                            <h2 id="gasValue" class="text-3xl font-bold">10.000</h2>
+                            <h2 id="gasValue" class="text-3xl font-bold"></h2>
                             <p>ppm</p>
                         </div>
                         
@@ -270,83 +271,127 @@
 
             updateBadge();
         });
-        async function fetchSensor() {
-    try {
-        const res = await fetch('/api/sensor/latest');
-        const data = await res.json();
-        if (!data) return;
+(function () {
 
-        // UPDATE GAS
-        document.getElementById('gasValue').innerText = data.gas_ppm;
+    const API_BASE = "http://172.20.10.3:8000/api";
 
-        // ELEMENT
-        const card  = document.getElementById('statusCard');
-        const title = document.getElementById('statusTitle');
-        const desc  = document.getElementById('statusDesc');
-        const icon  = document.getElementById('statusIcon');
+    async function fetchLatestSensor() {
+        try {
+            const res = await fetch(`${API_BASE}/sensor/latest`);
+            const data = await res.json();
+            if (!data) return;
 
-        // RESET WARNA SAJA (BUKAN RESET CLASS)
-        card.classList.remove('bg-red-100', 'bg-yellow-100', 'bg-green-100');
+            document.getElementById("gasValue").innerText = data.gas_ppm;
+            const gasWarningCard  = document.getElementById("gasWarningCard");
+            const gasWarningIcon  = document.getElementById("gasWarningIcon");
+            const gasWarningTitle = document.getElementById("gasWarningTitle");
+            const gasWarningDesc  = document.getElementById("gasWarningDesc");
 
-        if (data.status === 'BAHAYA') {
-            card.classList.add('bg-red-100');
-            title.innerText = 'Situasi Bahaya!';
-            desc.innerText  = 'Api atau gas tinggi terdeteksi!';
-            icon.className  = 'fa-solid fa-fire text-[40px] text-red-500';
+            const GAS_WASPADA = 400;
+            const GAS_BAHAYA  = 600;
+
+            gasWarningCard.classList.remove(
+                "bg-green-100",
+                "bg-yellow-100",
+                "bg-orange-100"
+            );
+
+            if (data.gas_ppm >= GAS_BAHAYA) {
+                gasWarningCard.classList.add("bg-orange-100");
+                gasWarningIcon.className = "fa-solid fa-fire text-[40px] text-orange-500";
+                gasWarningTitle.innerText = "Gas Berbahaya!";
+                gasWarningDesc.innerText  = "Segera lakukan pengecekan lokasi.";
+            }
+            else if (data.gas_ppm >= GAS_WASPADA) {
+                gasWarningCard.classList.add("bg-yellow-100");
+                gasWarningIcon.className = "fa-solid fa-triangle-exclamation text-[40px] text-yellow-500";
+                gasWarningTitle.innerText = "Gas Meningkat";
+                gasWarningDesc.innerText  = "Hati-hati, kadar gas mendekati batas.";
+            }
+            else {
+                gasWarningCard.classList.add("bg-green-100");
+                gasWarningIcon.className = "fa-solid fa-circle-check text-[40px] text-green-500";
+                gasWarningTitle.innerText = "Gas Aman";
+                gasWarningDesc.innerText  = "Kadar gas dalam batas normal.";
+            }
+
+
+
+            const statusCard  = document.getElementById("statusCard");
+            const statusIcon  = document.getElementById("statusIcon");
+            const statusTitle = document.getElementById("statusTitle");
+            const statusDesc  = document.getElementById("statusDesc");
+
+            statusCard.classList.remove(
+                "bg-red-100",
+                "bg-yellow-100",
+                "bg-green-100"
+            );
+
+            if (data.status === "BAHAYA") {
+                statusCard.classList.add("bg-red-100");
+                statusTitle.innerText = "Situasi Bahaya!";
+                statusDesc.innerText  = "Api atau gas tinggi terdeteksi!";
+                statusIcon.className  = "fa-solid fa-fire text-[40px] text-red-500";
+            } 
+            else if (data.status === "WASPADA") {
+                statusCard.classList.add("bg-yellow-100");
+                statusTitle.innerText = "Status Waspada";
+                statusDesc.innerText  = "Kadar gas mulai meningkat.";
+                statusIcon.className  = "fa-solid fa-triangle-exclamation text-[40px] text-yellow-500";
+            } 
+            else {
+                statusCard.classList.add("bg-green-100");
+                statusTitle.innerText = "Kondisi Aman";
+                statusDesc.innerText  = "Lingkungan aman.";
+                statusIcon.className  = "fa-solid fa-circle-check text-[40px] text-green-500";
+            }
+
+            const time = new Date().toLocaleTimeString();
+            gasChart.data.labels.push(time);
+            gasChart.data.datasets[0].data.push(data.gas_ppm);
+
+            if (gasChart.data.labels.length > 10) {
+                gasChart.data.labels.shift();
+                gasChart.data.datasets[0].data.shift();
+            }
+
+            gasChart.update();
+
+        } catch (err) {
+            console.error(err);
         }
-        else if (data.status === 'WASPADA') {
-            card.classList.add('bg-yellow-100');
-            title.innerText = 'Status Waspada';
-            desc.innerText  = 'Gas mulai meningkat.';
-            icon.className  = 'fa-solid fa-triangle-exclamation text-[40px] text-yellow-500';
-        }
-        else {
-            card.classList.add('bg-green-100');
-            title.innerText = 'Kondisi Aman';
-            desc.innerText  = 'Lingkungan aman.';
-            icon.className  = 'fa-solid fa-circle-check text-[40px] text-green-500';
-        }
-
-        // UPDATE CHART
-        const time = new Date().toLocaleTimeString();
-        gasChart.data.labels.push(time);
-        gasChart.data.datasets[0].data.push(data.gas_ppm);
-
-        if (gasChart.data.labels.length > 10) {
-            gasChart.data.labels.shift();
-            gasChart.data.datasets[0].data.shift();
-        }
-
-        gasChart.update();
-
-    } catch (err) {
-        console.error(err);
     }
-}
 
-// realtime tiap 2 detik
-setInterval(fetchSensor, 2000);
-fetchSensor();
+    async function fetchGasHistory() {
+        try {
+            const res = await fetch(`${API_BASE}/sensor/history`);
+            const data = await res.json();
+            if (!data || data.length === 0) return;
 
-        // Mark individual notification as read saat diklik
-        const notifItems = document.querySelectorAll('.notif-item');
-        notifItems.forEach(item => {
-            item.addEventListener('click', () => {
-                if (item.getAttribute('data-read') === 'false') {
-                    const dot = item.querySelector('.unread-dot');
-                    if (dot) {
-                        dot.remove(); // Hapus bulatan merah
-                    }
-                    item.setAttribute('data-read', 'true'); // Update status
+            gasChart.data.labels = data
+                .map(d => new Date(d.created_at).toLocaleTimeString())
+                .reverse();
 
-                    updateBadge();
-                }
-            });
-        });
+            gasChart.data.datasets[0].data = data
+                .map(d => d.gas_ppm)
+                .reverse();
 
-        updateBadge();
+            gasChart.update();
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    fetchLatestSensor();
+    fetchGasHistory();
+
+    setInterval(fetchLatestSensor, 2000);
+    setInterval(fetchGasHistory, 5000);
+
+})();
     </script>
-
 </body>
 
 
